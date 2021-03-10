@@ -1,0 +1,17 @@
+{
+  "name": "hybagel4",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "^12.5.1",
+    "quick.db": "^7.1.3",
+    "sequelize": "^6.4.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Multiapples",
+  "license": "MIT"
+}
