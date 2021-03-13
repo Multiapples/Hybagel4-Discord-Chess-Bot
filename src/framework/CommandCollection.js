@@ -31,6 +31,7 @@ module.exports = {
 		commands.forEach( c => {
 			
 			this.subCommands.set(c.name, c);
+			c.parent = this;
 		});
 	},
 	
