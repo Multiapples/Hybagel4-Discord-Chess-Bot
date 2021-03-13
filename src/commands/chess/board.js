@@ -5,6 +5,13 @@ module.exports = {
 	
 	execute(message, arguments, jointArguments) {
 		
-		message.reply(':chess_pawn: :chess_pawn: :chess_pawn: :chess_pawn: :crown: :chess_pawn: :chess_pawn: :chess_pawn:');
+		if (this.parent.isInGame(message.author.id)) {
+			
+			message.reply(this.parent.renderBoard(message.author.id));
+		}
+		else {
+			
+			message.reply('You are not in a game.');
+		}
 	},
 }
