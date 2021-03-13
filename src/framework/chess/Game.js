@@ -1,7 +1,7 @@
 const Position = require('./Position.js');
 const Piece = require('./Piece.js');
 
-module.exports = class ChessGame {
+module.exports = class Game {
 	
 	constructor() {
 		
@@ -45,11 +45,61 @@ module.exports = class ChessGame {
 		
 		let board = '\n```';
 		
-		for (let j = 0; j < 8; j++) {
+		for (let j = 7; j >= 0; j--) {
 			
 			for (let i = 0; i < 8; i++) {
-				board += (i + j) % 2 == 0 ? '  ' : '--';
+				
+				const checkeredSquareChar = (i + j) % 2 == 0 ? '-' : ' ';
+				
+				const cell = this.position.cells[i + j*8]
+				
+				const colorlessPiece = Piece.getPieceType(cell);
+				const pieceColor = Piece.getPieceColor(cell);
+				
+				let square;
+				
+				switch(colorlessPiece) {
+					
+					case Piece.EMPTY:
+						square = checkeredSquareChar;
+						break;
+					
+					case Piece.PAWN:
+						square = 'P';
+						break;
+					
+					case Piece.KNIGHT:
+						square = 'N';
+						break;
+					
+					case Piece.BISHOP:
+						square = 'B';
+						break;
+					
+					case Piece.ROOK:
+						square = 'R';
+						break;
+					
+					case Piece.QUEEN:
+						square = 'Q';
+						break;
+					
+					case Piece.KING:
+						square = 'K';
+						break;
+					
+					default:
+						square = '??';
+				}
+				
+				if (pieceColor == Piece.BLACK) {
+					
+					square = square.toLowerCase();
+				}
+				
+				board += square + checkeredSquareChar;
 			}
+			
 			board += '\n';
 		}
 		

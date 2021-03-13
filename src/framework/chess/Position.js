@@ -1,4 +1,6 @@
-module.exports = class ChessPosition {
+const Piece = require('./Piece.js');
+
+module.exports = class Position {
 	
 	constructor() {
 		
@@ -7,6 +9,6 @@ module.exports = class ChessPosition {
 	
 	wipe() {
 		
-		this.cells.fill(0);
+		this.cells.fill(Piece.EMPTY);
 	}
 }
