@@ -1,9 +1,11 @@
+const Position = require('./Position.js');
+
 module.exports = class ChessGame {
 	
 	
 	constructor() {
 		
-		
+		this.position = new Position();
 	}
 	
 	render() {

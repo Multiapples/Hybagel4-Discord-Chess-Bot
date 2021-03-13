@@ -1,9 +1,9 @@
 const CommandCollection = require('../framework/CommandCollection.js');
 const Board = require("./chess/board");
-const NewGame = require("./chess/newgame.js");
+const NewGame = require("./chess/newGame.js");
 
 const Discord = require('discord.js');
-const Game = require('../framework/chess/ChessGame.js');
+const Game = require('../framework/chess/Game.js');
 
 const collection = Object.create(CommandCollection);
 
