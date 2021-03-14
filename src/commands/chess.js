@@ -1,5 +1,6 @@
 const CommandCollection = require('../framework/CommandCollection.js');
 const Board = require("./chess/board");
+const Move = require("./chess/move.js");
 const NewGame = require("./chess/newGame.js");
 
 const Discord = require('discord.js');
@@ -9,7 +10,7 @@ const collection = Object.create(CommandCollection);
 
 collection.name = 'chess';
 description = '';
-collection.setSubCommands([Board, NewGame]);
+collection.setSubCommands([Board, Move, NewGame]);
 
 collection.games = new Discord.Collection();
 
@@ -28,5 +29,14 @@ collection.renderBoard = function(playerId) {
 	
 	return (this.games.get(playerId)).render();
 };
+
+collection.playerMakeMove = function(playerID, startSquare, endSquare) {
+	
+	const game = this.games.get(playerID);
+	
+	game.move(startSquare, endSquare);
+	
+	return game.render();
+}
 
 module.exports = collection;

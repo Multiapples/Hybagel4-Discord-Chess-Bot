@@ -107,4 +107,10 @@ module.exports = class Game {
 		
 		return board;
 	}
+	
+	move(startSquare, endSquare) {
+		
+		this.position.cells[endSquare] = this.position.cells[startSquare];
+		this.position.cells[startSquare] = Piece.EMPTY;
+	}
 }
