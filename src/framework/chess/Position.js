@@ -3,7 +3,7 @@ const Piece = require('./Piece.js');
 const slidingOffsets = [8, 1, -8, -1, 7, 9, -7, -9]; //N, E, S, W, NW, NE, SE, SW
 const knightOffsets = [6, 15, 17, 10, -6, -15, -17, -10]; // NWW, NNW, NNE, NEE, SEE, SSE, SSW, SWW
 
-const squaresUntilEdge = new Array(64);
+const squaresUntilEdge = [];
 
 for (let j = 0; j < 8; j++) {
 	
@@ -54,15 +54,7 @@ module.exports = class Position {
 		
 		const pieceColor = Piece.getPieceColor(piece);
 		
-		if      (colorlessPiece == Piece.QUEEN) {
-			
-			
-		}
-		else if (colorlessPiece == Piece.ROOK) {
-			
-			
-		}
-		else if (colorlessPiece == Piece.BISHOP) {
+		if      (colorlessPiece == Piece.PAWN) {
 			
 			
 		}
@@ -70,9 +62,17 @@ module.exports = class Position {
 			
 			
 		}
-		else if (colorlessPiece == Piece.PAWN) {
+		else if (colorlessPiece == Piece.BISHOP) {
 			
+			return this.getLegalMovesBishop(cellIndex, pieceColor);
+		}
+		else if (colorlessPiece == Piece.ROOK) {
 			
+			return this.getLegalMovesRook(cellIndex, pieceColor);
+		}
+		else if (colorlessPiece == Piece.QUEEN) {
+			
+			return this.getLegalMovesQueen(cellIndex, pieceColor);
 		}
 		else if (colorlessPiece == Piece.KING) {
 			
@@ -82,13 +82,124 @@ module.exports = class Position {
 		return [];
 	}
 	
+	getLegalMovesBishop(cellIndex, pieceColor) {
+		
+		const legalMoves = [];
+		
+		const enemyColor = Piece.getOppositeColor(pieceColor);
+		
+		// For each direction, record each space until the end of the board or until
+		// blocked by a friendly piece.
+		for (let dir = 4; dir < 8; dir++) {
+			
+			let targetSquare = cellIndex;
+			
+			for (let mag = 0; mag < squaresUntilEdge[cellIndex][dir]; mag++) {
+				
+				const offset = slidingOffsets[dir];
+				
+				targetSquare += offset;
+				
+				if (Piece.getPieceColor(this.cells[targetSquare]) == pieceColor) {
+					
+					break; // Blocked by a friendly piece,
+					       // bishop cannot move any further in that direction.
+				}
+				
+				legalMoves.push(targetSquare);
+				
+				if (Piece.getPieceColor(this.cells[targetSquare]) == enemyColor) {
+					
+					break; // Captured an enemy piece,
+					       // bishop cannot move any further in that direction.
+				}
+			}
+		}
+		
+		return legalMoves;
+	}
+	
+	getLegalMovesRook(cellIndex, pieceColor) {
+		
+		const legalMoves = [];
+		
+		const enemyColor = Piece.getOppositeColor(pieceColor);
+		
+		// For each direction, record each space until the end of the board or until
+		// blocked by a friendly piece.
+		for (let dir = 0; dir < 4; dir++) {
+			
+			let targetSquare = cellIndex;
+			
+			for (let mag = 0; mag < squaresUntilEdge[cellIndex][dir]; mag++) {
+				
+				const offset = slidingOffsets[dir];
+				
+				targetSquare += offset;
+				
+				if (Piece.getPieceColor(this.cells[targetSquare]) == pieceColor) {
+					
+					break; // Blocked by a friendly piece,
+					       // bishop cannot move any further in that direction.
+				}
+				
+				legalMoves.push(targetSquare);
+				
+				if (Piece.getPieceColor(this.cells[targetSquare]) == enemyColor) {
+					
+					break; // Captured an enemy piece,
+					       // bishop cannot move any further in that direction.
+				}
+			}
+		}
+		
+		return legalMoves;
+	}
+	
+	getLegalMovesQueen(cellIndex, pieceColor) {
+		
+		const legalMoves = [];
+		
+		const enemyColor = Piece.getOppositeColor(pieceColor);
+		
+		// For each direction, record each space until the end of the board or until
+		// blocked by a friendly piece.
+		for (let dir = 0; dir < 8; dir++) {
+			
+			let targetSquare = cellIndex;
+			
+			for (let mag = 0; mag < squaresUntilEdge[cellIndex][dir]; mag++) {
+				
+				const offset = slidingOffsets[dir];
+				
+				targetSquare += offset;
+				
+				if (Piece.getPieceColor(this.cells[targetSquare]) == pieceColor) {
+					
+					break; // Blocked by a friendly piece,
+					       // bishop cannot move any further in that direction.
+				}
+				
+				legalMoves.push(targetSquare);
+				
+				if (Piece.getPieceColor(this.cells[targetSquare]) == enemyColor) {
+					
+					break; // Captured an enemy piece,
+					       // bishop cannot move any further in that direction.
+				}
+			}
+		}
+		
+		return legalMoves;
+	}
+	
 	getLegalMovesKing(cellIndex, pieceColor) {
 		
 		const legalMoves = [];
 		
 		// Move one space in each direction.
 		// If it is not a friendly square, you can move/capture.
-		for (let i = 0; i < slidingOffsets.length; i++) {
+		for (let i = 0; i < 8; i++) {
 			
 			const offset = slidingOffsets[i];
 			

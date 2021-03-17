@@ -10,13 +10,17 @@ module.exports = class Piece {
 	static QUEEN  = 64;
 	static KING   = 128;
 	
-	static getPieceType(cell) {
+	static getPieceType(piece) {
 		
-		return cell & (255 - this.BLACK - this.WHITE); // bitmask out the white and black values
+		return piece & (255 ^ (this.BLACK | this.WHITE)); // bitmask out the white and black values
 	}
 	
-	static getPieceColor(cell) {
+	static getPieceColor(piece) {
 		
-		return cell & (this.WHITE | this.BLACK) // bitmask only the white and black values
+		return piece & (this.WHITE | this.BLACK) // bitmask only the white and black values
+	}
+	
+	static getOppositeColor(color) {
+		return (this.WHITE | this.BLACK) ^ color;
 	}
 }

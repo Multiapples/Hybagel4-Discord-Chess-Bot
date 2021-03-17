@@ -89,12 +89,16 @@ module.exports = class Game {
 						break;
 					
 					default:
-						square = '??';
+						square = 'P?';
 				}
 				
 				if (pieceColor == Piece.BLACK) {
 					
 					square = square.toLowerCase();
+				}
+				else if (pieceColor != Piece.WHITE && colorlessPiece != Piece.EMPTY) { // Redundant debug, in case of messed up color bits
+					
+					square = "C?"
 				}
 				
 				board += square + checkeredSquareChar;
