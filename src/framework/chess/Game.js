@@ -113,4 +113,9 @@ module.exports = class Game {
 		this.position.cells[endSquare] = this.position.cells[startSquare];
 		this.position.cells[startSquare] = Piece.EMPTY;
 	}
+	
+	getPieceLegalMoves(cellIndex) {
+		
+		return this.position.getPieceLegalMoves(cellIndex);
+	}
 }
