@@ -201,6 +201,11 @@ module.exports = class Position {
 		// If it is not a friendly square, you can move/capture.
 		for (let i = 0; i < 8; i++) {
 			
+			if (squaresUntilEdge[cellIndex][i] == 0) {
+				
+				continue;
+			}
+			
 			const offset = slidingOffsets[i];
 			
 			const targetSquare = cellIndex + offset;
