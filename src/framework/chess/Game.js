@@ -43,68 +43,22 @@ module.exports = class Game {
 	
 	render() {
 		
-		let board = '\n```';
+		const horizontalGrid = '+----+----+----+----+----+----+----+----+\n';
+		
+		let board = '```\n' + horizontalGrid;
 		
 		for (let j = 7; j >= 0; j--) {
 			
+			board += '|';
+			
 			for (let i = 0; i < 8; i++) {
 				
-				const checkeredSquareChar = (i + j) % 2 == 0 ? '-' : ' ';
+				const piece = this.position.cells[i + j*8];
 				
-				const cell = this.position.cells[i + j*8]
-				
-				const colorlessPiece = Piece.getPieceType(cell);
-				const pieceColor = Piece.getPieceColor(cell);
-				
-				let square;
-				
-				switch(colorlessPiece) {
-					
-					case Piece.EMPTY:
-						square = checkeredSquareChar;
-						break;
-					
-					case Piece.PAWN:
-						square = 'P';
-						break;
-					
-					case Piece.KNIGHT:
-						square = 'N';
-						break;
-					
-					case Piece.BISHOP:
-						square = 'B';
-						break;
-					
-					case Piece.ROOK:
-						square = 'R';
-						break;
-					
-					case Piece.QUEEN:
-						square = 'Q';
-						break;
-					
-					case Piece.KING:
-						square = 'K';
-						break;
-					
-					default:
-						square = 'P?';
-				}
-				
-				if (pieceColor == Piece.BLACK) {
-					
-					square = square.toLowerCase();
-				}
-				else if (pieceColor != Piece.WHITE && colorlessPiece != Piece.EMPTY) { // Redundant debug, in case of messed up color bits
-					
-					square = "C?"
-				}
-				
-				board += square + checkeredSquareChar;
+				board += pieceToString(piece) + '|';
 			}
 			
-			board += '\n';
+			board += '\n' + horizontalGrid;
 		}
 		
 		board += '```';
@@ -122,4 +76,57 @@ module.exports = class Game {
 		
 		return this.position.getPieceLegalMoves(cellIndex);
 	}
+}
+
+function pieceToString(piece) {
+	
+	const colorlessPiece = Piece.getPieceType(piece);
+	const pieceColor = Piece.getPieceColor(piece);
+	
+	let pieceString;
+	
+	switch(colorlessPiece) {
+		
+		case Piece.EMPTY:
+			pieceString = '    ';
+			break;
+		
+		case Piece.PAWN:
+			pieceString = ' P  ';
+			break;
+		
+		case Piece.KNIGHT:
+			pieceString = ' N  ';
+			break;
+		
+		case Piece.BISHOP:
+			pieceString = ' B  ';
+			break;
+		
+		case Piece.ROOK:
+			pieceString = ' R  ';
+			break;
+		
+		case Piece.QUEEN:
+			pieceString = ' Q  ';
+			break;
+		
+		case Piece.KING:
+			pieceString = ' K  ';
+			break;
+		
+		default:
+			pieceString = ' P? ';
+	}
+	
+	if (pieceColor == Piece.BLACK) {
+		
+		pieceString = pieceString.toLowerCase();
+	}
+	else if (pieceColor != Piece.WHITE && colorlessPiece != Piece.EMPTY) { // Redundant debug, in case of messed up color bits
+		
+		pieceString = ' C? ';
+	}
+	
+	return pieceString;
 }
