@@ -79,7 +79,7 @@ module.exports = class Position {
 		
 		if      (colorlessPiece == Piece.PAWN) {
 			
-			
+			return this.getLegalMovesPawn(cellIndex, pieceColor);
 		}
 		else if (colorlessPiece == Piece.KNIGHT) {
 			
@@ -103,6 +103,59 @@ module.exports = class Position {
 		}
 		
 		return [];
+	}
+	
+	getLegalMovesPawn(cellIndex, pieceColor) {
+		
+		// Return no legal moves if the pawn is on the 1st or 8th rank,
+		// though there should be no cases where a pawn is ever on those ranks
+		if (cellIndex < 8 || cellIndex >= 56) {
+			
+			return [];
+		}
+		
+		const legalMoves = [];
+		
+		const isWhite = pieceColor == Piece.WHITE;
+		
+		const homeRank = isWhite ? 1 : 6;
+		
+		const offset = isWhite ? 8 : -8;
+		
+		const targetSquare = cellIndex + offset;
+		
+		// Add the cell immediately infront of the pawn if it is empty.
+		if (this.cells[targetSquare] == Piece.EMPTY) {
+			
+			legalMoves.push(targetSquare);
+			
+			// Add the cell 2 spaces infront of the pawn if it is empty and the pawn is on its home rank.
+			// (And also the pawn is able to cross the first square);
+			if (Math.floor(cellIndex / 8) == homeRank && this.cells[cellIndex + 2*offset] == Piece.EMPTY) {
+				
+				legalMoves.push(cellIndex + 2*offset);
+			}
+		}
+		
+		
+		// Add the cells 1 space forwards and 1 to the left and right of that if there is an enemy piece there,
+		// and that cell is not off the edge.
+		if (Piece.getPieceColor(this.cells[targetSquare - 1]) == Piece.getOppositeColor(pieceColor)) {
+			
+			if (squaresUntilEdge[cellIndex][3] != 0) {
+				
+				legalMoves.push(targetSquare - 1);
+			}
+		}
+		if (Piece.getPieceColor(this.cells[targetSquare + 1]) == Piece.getOppositeColor(pieceColor)) {
+			
+			if (squaresUntilEdge[cellIndex][1] != 0) {
+				
+				legalMoves.push(targetSquare + 1);
+			}
+		}
+		
+		return legalMoves;
 	}
 	
 	getLegalMovesKnight(cellIndex, pieceColor) {
