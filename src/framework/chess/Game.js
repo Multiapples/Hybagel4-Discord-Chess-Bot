@@ -98,7 +98,7 @@ module.exports = class Game {
 			board += '\n' + horizontalGrid;
 		}
 		
-		board += '```';
+		board +=  '\n' + legalMoves + '```';
 		
 		return board;
 	}
