@@ -55,7 +55,7 @@ module.exports = class Game {
 				
 				const piece = this.position.cells[i + j*8];
 				
-				board += pieceToString(piece) + '|';
+				board += ' ' + pieceToString(piece) + ' |';
 			}
 			
 			board += '\n' + horizontalGrid;
@@ -74,7 +74,33 @@ module.exports = class Game {
 	
 	getPieceLegalMoves(cellIndex) {
 		
-		return this.position.getPieceLegalMoves(cellIndex);
+		const legalMoves = this.position.getPieceLegalMoves(cellIndex);
+		
+		const horizontalGrid = '+----+----+----+----+----+----+----+----+\n';
+		
+		let board = '```\n' + horizontalGrid;
+		
+		for (let j = 7; j >= 0; j--) {
+			
+			board += '|';
+			
+			for (let i = 0; i < 8; i++) {
+				
+				const ind = i + j*8;
+				
+				const piece = this.position.cells[ind];
+				
+				const highlightChars = legalMoves.includes(ind) ? '*' : ' ';
+				
+				board += highlightChars + pieceToString(piece) + highlightChars + '|';
+			}
+			
+			board += '\n' + horizontalGrid;
+		}
+		
+		board += '```';
+		
+		return board;
 	}
 }
 
@@ -88,35 +114,35 @@ function pieceToString(piece) {
 	switch(colorlessPiece) {
 		
 		case Piece.EMPTY:
-			pieceString = '    ';
+			pieceString = '  ';
 			break;
 		
 		case Piece.PAWN:
-			pieceString = ' P  ';
+			pieceString = 'P ';
 			break;
 		
 		case Piece.KNIGHT:
-			pieceString = ' N  ';
+			pieceString = 'N ';
 			break;
 		
 		case Piece.BISHOP:
-			pieceString = ' B  ';
+			pieceString = 'B ';
 			break;
 		
 		case Piece.ROOK:
-			pieceString = ' R  ';
+			pieceString = 'R ';
 			break;
 		
 		case Piece.QUEEN:
-			pieceString = ' Q  ';
+			pieceString = 'Q ';
 			break;
 		
 		case Piece.KING:
-			pieceString = ' K  ';
+			pieceString = 'K ';
 			break;
 		
 		default:
-			pieceString = ' P? ';
+			pieceString = 'P?';
 	}
 	
 	if (pieceColor == Piece.BLACK) {
@@ -125,7 +151,7 @@ function pieceToString(piece) {
 	}
 	else if (pieceColor != Piece.WHITE && colorlessPiece != Piece.EMPTY) { // Redundant debug, in case of messed up color bits
 		
-		pieceString = ' C? ';
+		pieceString = 'C?';
 	}
 	
 	return pieceString;
