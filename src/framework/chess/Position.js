@@ -4,6 +4,7 @@ const slidingOffsets = [8, 1, -8, -1, 7, 9, -7, -9]; //N, E, S, W, NW, NE, SE, S
 const knightOffsets = [6, 15, 17, 10, -6, -15, -17, -10]; // NWW, NNW, NNE, NEE, SEE, SSE, SSW, SWW
 
 const squaresUntilEdge = [];
+const knightMoveable = [];
 
 for (let j = 0; j < 8; j++) {
 	
@@ -26,6 +27,28 @@ for (let j = 0; j < 8; j++) {
 		]; //N, E, S, W, NW, NE, SE, SW
 		
 		squaresUntilEdge.push(localUntilEdge);
+		
+		const NWW = i-2 >= 0 & j+1 <  8;
+		const NNW = i-1 >= 0 & j+2 <  8;
+		const NNE = i+1 <  8 & j+2 <  8;
+		const NEE = i+2 <  8 & j+1 <  8;
+		const SEE = i+2 <  8 & j-1 >= 0;
+		const SSE = i+1 <  8 & j-2 >= 0;
+		const SSW = i-1 >= 0 & j-2 >= 0;
+		const SWW = i-2 >= 0 & j-1 >= 0;
+		
+		localMoveable = [
+			NWW,
+			NNW,
+			NNE,
+			NEE,
+			SEE,
+			SSE,
+			SSW,
+			SWW,
+		];
+		
+		knightMoveable.push(localMoveable);
 	}
 }
 
@@ -60,7 +83,7 @@ module.exports = class Position {
 		}
 		else if (colorlessPiece == Piece.KNIGHT) {
 			
-			
+			return this.getLegalMovesKnight(cellIndex, pieceColor);
 		}
 		else if (colorlessPiece == Piece.BISHOP) {
 			
@@ -80,6 +103,34 @@ module.exports = class Position {
 		}
 		
 		return [];
+	}
+	
+	getLegalMovesKnight(cellIndex, pieceColor) {
+		
+		const legalMoves = [];
+		
+		// Try to move to each square a knight's move away.
+		// If it is not a friendly square, you can move/capture.
+		for (let i = 0; i < 8; i++) {
+			
+			if (!knightMoveable[cellIndex][i]) {
+				
+				continue; // Knight would move off the board, go to next direction.
+			}
+			
+			const offset = knightOffsets[i];
+			
+			const targetSquare = cellIndex + offset;
+			
+			if (Piece.getPieceColor(this.cells[targetSquare]) == pieceColor) {
+				
+				continue; // Blocked by a friendly piece, knight cannot move there.
+			}
+			
+			legalMoves.push(targetSquare);
+		}
+		
+		return legalMoves;
 	}
 	
 	getLegalMovesBishop(cellIndex, pieceColor) {
