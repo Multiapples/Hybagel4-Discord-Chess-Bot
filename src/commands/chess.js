@@ -5,6 +5,7 @@ subCommands.push(require("./chess/board"));
 subCommands.push(require("./chess/legalMoves.js"));
 subCommands.push(require("./chess/move.js"));
 subCommands.push(require("./chess/newGame.js"));
+subCommands.push(require("./chess/checks.js"));
 
 const Discord = require('discord.js');
 const Game = require('../framework/chess/Game.js');
@@ -48,5 +49,12 @@ collection.getPieceLegalMoves = function(playerID, square) {
 	
 	return game.getPieceLegalMoves(square);
 };
+
+collection.getChecks = function(playerID, color) {
+	
+	const game = this.games.get(playerID);
+	
+	return game.getChecks(color);
+}
 
 module.exports = collection;

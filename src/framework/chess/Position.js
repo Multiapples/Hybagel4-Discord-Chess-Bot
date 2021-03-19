@@ -105,6 +105,75 @@ module.exports = class Position {
 		return [];
 	}
 	
+	getChecks(pieceColor) {
+		console.log(pieceColor, ' SEARCHING FOR CHECKS');
+		// Find the king. Ideally this should be replaced with a lookup of the king's index from a map.
+		let king;
+		
+		for (let i = 0; i < 64; i++) { 
+			
+			if (this.cells[i] == (Piece.KING | pieceColor)) {
+				
+				king = i;
+				break;
+			}
+		}
+		
+		const enemyColor = Piece.getOppositeColor(pieceColor);
+		
+		const checks = [];
+		
+		// Search in all directions for checks by sliding pieces.
+		for (let dir = 0; dir < 8; dir++) {
+						
+			let targetSquare = king;
+
+			const offset = slidingOffsets[dir];
+			
+			for (let mag = 0; mag < squaresUntilEdge[king][dir]; mag++) {
+				
+				targetSquare += offset;
+				
+				if (Piece.getPieceColor(this.cells[targetSquare]) == pieceColor) {
+					console.log(dir, mag, ' ray ends on friendly piece');
+					break; // Ray ends at a friendly piece, no checks from this direction.
+				}
+				
+				if (Piece.getPieceColor(this.cells[targetSquare]) == enemyColor) {
+					console.log(dir, mag, ' ray ends on enemy piece');
+					// Ray ends at an enemy piece.
+					// Make sure that the enemy can actually move to check the king.
+					const attackingPiece = Piece.getPieceType(this.cells[targetSquare]);
+					
+					if (attackingPiece == Piece.QUEEN) {
+						
+						checks.push(targetSquare);
+					}
+					
+					if (dir < 4) { // First four directions are cardinal directions.
+						
+						if (attackingPiece == Piece.ROOK) {
+							
+							checks.push(targetSquare);
+						}
+					}
+					else { // Last four directions are diagonal directions.
+						
+						if (attackingPiece == Piece.BISHOP) {
+							
+							checks.push(targetSquare);
+						}
+					}
+					
+					break; // Ray blocked by an enemy piece.
+					          // No checks possible further down this direction, so move on. 
+				}
+			}
+		}
+		
+		return checks;
+	}
+	
 	getLegalMovesPawn(cellIndex, pieceColor) {
 		
 		// Return no legal moves if the pawn is on the 1st or 8th rank,
@@ -117,11 +186,9 @@ module.exports = class Position {
 		const legalMoves = [];
 		
 		const isWhite = pieceColor == Piece.WHITE;
-		
 		const homeRank = isWhite ? 1 : 6;
 		
 		const offset = isWhite ? 8 : -8;
-		
 		const targetSquare = cellIndex + offset;
 		
 		// Add the cell immediately infront of the pawn if it is empty.
@@ -137,17 +204,18 @@ module.exports = class Position {
 			}
 		}
 		
+		const enemyColor = Piece.getOppositeColor(pieceColor);
 		
 		// Add the cells 1 space forwards and 1 to the left and right of that if there is an enemy piece there,
 		// and that cell is not off the edge.
-		if (Piece.getPieceColor(this.cells[targetSquare - 1]) == Piece.getOppositeColor(pieceColor)) {
+		if (Piece.getPieceColor(this.cells[targetSquare - 1]) == enemyColor) {
 			
 			if (squaresUntilEdge[cellIndex][3] != 0) {
 				
 				legalMoves.push(targetSquare - 1);
 			}
 		}
-		if (Piece.getPieceColor(this.cells[targetSquare + 1]) == Piece.getOppositeColor(pieceColor)) {
+		if (Piece.getPieceColor(this.cells[targetSquare + 1]) == enemyColor) {
 			
 			if (squaresUntilEdge[cellIndex][1] != 0) {
 				
@@ -198,9 +266,9 @@ module.exports = class Position {
 			
 			let targetSquare = cellIndex;
 			
+			const offset = slidingOffsets[dir];
+			
 			for (let mag = 0; mag < squaresUntilEdge[cellIndex][dir]; mag++) {
-				
-				const offset = slidingOffsets[dir];
 				
 				targetSquare += offset;
 				
@@ -234,10 +302,10 @@ module.exports = class Position {
 		for (let dir = 0; dir < 4; dir++) {
 			
 			let targetSquare = cellIndex;
+				
+			const offset = slidingOffsets[dir];
 			
 			for (let mag = 0; mag < squaresUntilEdge[cellIndex][dir]; mag++) {
-				
-				const offset = slidingOffsets[dir];
 				
 				targetSquare += offset;
 				
@@ -272,9 +340,9 @@ module.exports = class Position {
 			
 			let targetSquare = cellIndex;
 			
+			const offset = slidingOffsets[dir];
+			
 			for (let mag = 0; mag < squaresUntilEdge[cellIndex][dir]; mag++) {
-				
-				const offset = slidingOffsets[dir];
 				
 				targetSquare += offset;
 				

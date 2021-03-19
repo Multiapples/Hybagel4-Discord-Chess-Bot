@@ -9,6 +9,19 @@ module.exports = {
 			
 			if (arguments.length == 1) {
 				
+				if (jointArguments == 'nuclear') {
+					
+					let data = '';
+					
+					for (let i = 0; i < 64; i++) {
+					
+						data += 'your moves: ' + this.parent.getPieceLegalMoves(message.author.id, i);
+					}
+					
+					console.log(data);
+					message.reply('output logged in dev console');
+				}
+				
 				if (arguments[0].length == 2) {
 					
 					const coordsRegex = /[A-Ha-h][0-8]/; // file-rank (eg. e4, a8, h1)

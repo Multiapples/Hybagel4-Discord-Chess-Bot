@@ -102,6 +102,11 @@ module.exports = class Game {
 		
 		return board;
 	}
+	
+	getChecks(color) {
+		
+		return this.position.getChecks(color);
+	}
 }
 
 function pieceToString(piece) {
