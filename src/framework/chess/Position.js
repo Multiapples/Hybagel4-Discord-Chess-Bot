@@ -171,6 +171,24 @@ module.exports = class Position {
 			}
 		}
 		
+		// Search for knights checking the king.
+		for (let i = 0; i < 8; i++) {
+			
+			if (!knightMoveable[king][i]) {
+				
+				continue; // Square would be off the board, go to next direction.
+			}
+			
+			const offset = knightOffsets[i];
+			
+			const targetSquare = king + offset;
+			
+			if (this.cells[targetSquare] == (Piece.KNIGHT | enemyColor)) {
+				
+				checks.push(targetSquare);
+			}
+		}
+		
 		return checks;
 	}
 	
