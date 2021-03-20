@@ -106,7 +106,7 @@ module.exports = class Position {
 	}
 	
 	getChecks(pieceColor) {
-		console.log(pieceColor, ' SEARCHING FOR CHECKS');
+		
 		// Find the king. Ideally this should be replaced with a lookup of the king's index from a map.
 		let king;
 		
@@ -135,12 +135,12 @@ module.exports = class Position {
 				targetSquare += offset;
 				
 				if (Piece.getPieceColor(this.cells[targetSquare]) == pieceColor) {
-					console.log(dir, mag, ' ray ends on friendly piece');
+					
 					break; // Ray ends at a friendly piece, no checks from this direction.
 				}
 				
 				if (Piece.getPieceColor(this.cells[targetSquare]) == enemyColor) {
-					console.log(dir, mag, ' ray ends on enemy piece');
+					
 					// Ray ends at an enemy piece.
 					// Make sure that the enemy can actually move to check the king.
 					const attackingPiece = Piece.getPieceType(this.cells[targetSquare]);
@@ -166,7 +166,7 @@ module.exports = class Position {
 					}
 					
 					break; // Ray blocked by an enemy piece.
-					          // No checks possible further down this direction, so move on. 
+					       // No checks possible further down this direction, so move on. 
 				}
 			}
 		}
