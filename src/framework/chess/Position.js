@@ -189,6 +189,19 @@ module.exports = class Position {
 			}
 		}
 		
+		// Search for pawns checking the king.
+		const enemyPawnMovementDir = pieceColor == Piece.WHITE ? -1 : 1;
+		
+		if (this.cells[king - 8*enemyPawnMovementDir + 1] == (Piece.PAWN | enemyColor)) {
+			
+			checks.push(king - 8*enemyPawnMovementDir + 1);
+		}
+		
+		if (this.cells[king - 8*enemyPawnMovementDir - 1] == (Piece.PAWN | enemyColor)) {
+			
+			checks.push(king - 8*enemyPawnMovementDir - 1);
+		}
+		
 		return checks;
 	}
 	
