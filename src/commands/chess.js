@@ -57,4 +57,11 @@ collection.getChecks = function(playerID, color) {
 	return game.getChecks(color);
 }
 
+collection.isWhiteToMove = function(playerID) {
+	
+	const game = this.games.get(playerID);
+	
+	return game.isWhiteToMove();
+}
+
 module.exports = collection;

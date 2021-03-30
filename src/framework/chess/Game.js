@@ -68,8 +68,7 @@ module.exports = class Game {
 	
 	move(startSquare, endSquare) {
 		
-		this.position.cells[endSquare] = this.position.cells[startSquare];
-		this.position.cells[startSquare] = Piece.EMPTY;
+		this.position.move(startSquare, endSquare);
 	}
 	
 	getPieceLegalMoves(cellIndex) {
@@ -106,6 +105,11 @@ module.exports = class Game {
 	getChecks(color) {
 		
 		return this.position.getChecks(color);
+	}
+	
+	isWhiteToMove() {
+		
+		return this.position.isWhiteToMove;
 	}
 }
 

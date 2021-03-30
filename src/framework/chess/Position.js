@@ -57,11 +57,21 @@ module.exports = class Position {
 	constructor() {
 		
 		this.cells = new Array(64); // Starts at a1 and goes rank by rank.
+		this.isWhiteToMove = true;
+		
 	}
 	
 	wipe() {
 		
 		this.cells.fill(Piece.EMPTY);
+	}
+	
+	move(startSquare, endSquare) {
+		
+		this.isWhiteToMove = !this.isWhiteToMove;
+		
+		this.cells[endSquare] = this.cells[startSquare];
+		this.cells[startSquare] = Piece.EMPTY;
 	}
 	
 	getPieceLegalMoves(cellIndex) {

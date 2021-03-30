@@ -7,13 +7,20 @@ module.exports = {
 		
 		if (this.parent.isInGame(message.author.id)) {
 			
-			if (arguments.length == 2) {
+			if (arguments.length == 3) {
 				
 				if (arguments[0].length == 2 && arguments[1].length == 2) {
 					
 					const coordsRegex = /[A-Ha-h][0-8]/; // file-rank (eg. e4, a8, h1)
 					
-					if (arguments[0].match(coordsRegex) && arguments[1].match(coordsRegex)) {
+					if (arguments[0].match(coordsRegex) && arguments[1].match(coordsRegex) && (arguments[2] == 'b' || arguments[2] == 'w')) {
+						
+						const color = arguments[2] == 'w';
+						
+						if (this.parent.isWhiteToMove(message.author.id) != color) {
+							
+							return message.reply('It is not ur turn.');
+						}
 						
 						const alphaVal = (s) => s.toLowerCase().charCodeAt(0) - 97 //a -> 0; b -> 1; ... h -> 7;
 						
@@ -22,7 +29,7 @@ module.exports = {
 						const endFile   = alphaVal(arguments[1].charAt(0));
 						const endRank   = parseInt(arguments[1].charAt(1)) - 1;
 						
-						message.reply(this.parent.playerMakeMove(message.author.id, startFile + startRank*8, endFile + endRank*8));
+						message.reply(this.parent.playerMakeMove(message.author.id, startFile + startRank*8, endFile + endRank*8, color));
 					}
 				}
 			}
