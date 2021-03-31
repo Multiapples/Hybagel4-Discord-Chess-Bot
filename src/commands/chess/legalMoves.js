@@ -33,7 +33,9 @@ module.exports = {
 						const file = alphaVal(arguments[0].charAt(0));
 						const rank = parseInt(arguments[0].charAt(1)) - 1;
 						
-						message.reply('your moves: ' + this.parent.getPieceLegalMoves(message.author.id, file + rank*8));
+						message.reply('your moves:', {
+							files: [this.parent.getPieceLegalMoves(message.author.id, file + rank*8)]
+						});
 					}
 				}
 			}

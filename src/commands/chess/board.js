@@ -7,7 +7,9 @@ module.exports = {
 		
 		if (this.parent.isInGame(message.author.id)) {
 			
-			message.reply(this.parent.renderBoard(message.author.id));
+			message.reply({
+				files: [this.parent.renderBoard(message.author.id)]
+			});
 		}
 		else {
 			

@@ -1,7 +1,11 @@
+const { createCanvas } = require('canvas');
+
 const Position = require('./Position.js');
 const Piece = require('./Piece.js');
 
 module.exports = class Game {
+	
+	static sprites;
 	
 	constructor() {
 		
@@ -43,27 +47,27 @@ module.exports = class Game {
 	
 	render() {
 		
-		const horizontalGrid = '+----+----+----+----+----+----+----+----+\n';
+		const canvas = createCanvas(30*8, 30*8);
+		const context = canvas.getContext('2d');
 		
-		let board = '```\n' + horizontalGrid;
+		context.drawImage(sprites.get('board'), 0, 0);
 		
-		for (let j = 7; j >= 0; j--) {
-			
-			board += '|';
+		for (let j = 0; j < 8; j++) {
 			
 			for (let i = 0; i < 8; i++) {
 				
-				const piece = this.position.cells[i + j*8];
+				const img = sprites.get(pieceToName(this.position.cells[i + j*8]));
 				
-				board += ' ' + pieceToString(piece) + ' |';
+				if (!img) {
+					
+					continue;
+				}
+				
+				context.drawImage(img, i*30, (8-1-j)*30);
 			}
-			
-			board += '\n' + horizontalGrid;
 		}
 		
-		board += '```';
-		
-		return board;
+		return canvas.toBuffer();
 	}
 	
 	move(startSquare, endSquare) {
@@ -75,31 +79,30 @@ module.exports = class Game {
 		
 		const legalMoves = this.position.getPieceLegalMoves(cellIndex);
 		
-		const horizontalGrid = '+----+----+----+----+----+----+----+----+\n';
+		const canvas = createCanvas(30*8, 30*8);
+		const context = canvas.getContext('2d');
 		
-		let board = '```\n' + horizontalGrid;
+		context.drawImage(sprites.get('board'), 0, 0);
 		
-		for (let j = 7; j >= 0; j--) {
-			
-			board += '|';
+		for (let j = 0; j < 8; j++) {
 			
 			for (let i = 0; i < 8; i++) {
 				
-				const ind = i + j*8;
+				const img = sprites.get(pieceToName(this.position.cells[i + j*8]));
 				
-				const piece = this.position.cells[ind];
+				if (img) {
+					
+					context.drawImage(img, i*30, (8-1-j)*30);
+				}
 				
-				const highlightChars = legalMoves.includes(ind) ? '*' : ' ';
-				
-				board += highlightChars + pieceToString(piece) + highlightChars + '|';
+				if (legalMoves.includes(i + j*8)) {
+					
+					context.drawImage(sprites.get('legal_overlay'), i*30, (8-1-j)*30);
+				}
 			}
-			
-			board += '\n' + horizontalGrid;
 		}
 		
-		board +=  '\n' + legalMoves + '```';
-		
-		return board;
+		return canvas.toBuffer();
 	}
 	
 	getChecks(color) {
@@ -161,6 +164,65 @@ function pieceToString(piece) {
 	else if (pieceColor != Piece.WHITE && colorlessPiece != Piece.EMPTY) { // Redundant debug, in case of messed up color bits
 		
 		pieceString = 'C?';
+	}
+	
+	return pieceString;
+}
+
+function pieceToName(piece) {
+	
+	const colorlessPiece = Piece.getPieceType(piece);
+	const pieceColor = Piece.getPieceColor(piece);
+	
+	let pieceString;
+	
+	if (pieceColor == Piece.BLACK) {
+		
+		pieceString = 'black';
+	}
+	else if (pieceColor == Piece.WHITE) {
+		
+		pieceString = 'white';
+	}
+	else {
+		
+		pieceString = 'colorless';
+	}
+	
+	pieceString += '_';
+	
+	switch(colorlessPiece) {
+		
+		case Piece.EMPTY:
+			pieceString += 'empty';
+			break;
+		
+		case Piece.PAWN:
+			pieceString += 'pawn';
+			break;
+		
+		case Piece.KNIGHT:
+			pieceString += 'knight';
+			break;
+		
+		case Piece.BISHOP:
+			pieceString += 'bishop';
+			break;
+		
+		case Piece.ROOK:
+			pieceString += 'rook';
+			break;
+		
+		case Piece.QUEEN:
+			pieceString += 'queen';
+			break;
+		
+		case Piece.KING:
+			pieceString += 'king';
+			break;
+		
+		default:
+			pieceString += '';
 	}
 	
 	return pieceString;

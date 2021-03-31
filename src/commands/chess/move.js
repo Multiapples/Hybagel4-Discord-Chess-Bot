@@ -29,7 +29,9 @@ module.exports = {
 						const endFile   = alphaVal(arguments[1].charAt(0));
 						const endRank   = parseInt(arguments[1].charAt(1)) - 1;
 						
-						message.reply(this.parent.playerMakeMove(message.author.id, startFile + startRank*8, endFile + endRank*8, color));
+						message.reply({
+							files: [this.parent.playerMakeMove(message.author.id, startFile + startRank*8, endFile + endRank*8, color)]
+						});
 					}
 				}
 			}
